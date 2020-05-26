@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Holdem Calculator
 =================
 
@@ -347,3 +348,6 @@ Calls to calculate() return a list of floats. The first element in the list corr
 ## Copyright
 
 Copyright (c) 2013 Kevin Tseng. See [LICENSE](https://github.com/ktseng/holdem_calc/blob/master/LICENSE) for details.
+=======
+# push_fold_solver
+>>>>>>> 623dd85b03b83c32ebfb4af83ecb3e15d6ddd0ad
