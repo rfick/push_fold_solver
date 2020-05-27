@@ -4,46 +4,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from push_fold_models import Pusher, Caller
-
-def load_dictionary(filename):
-	with open(filename + '.pkl', 'rb') as f:
-		return pickle.load(f)
-
-def oneHotCard(card, ranks):
-	oneHot = np.zeros((1, 13))
-	oneHot[0, ranks.index(card[0])] = 1
-	return oneHot
-
-# 's' = suited, 'u' = offsuit
-def oneHotSuited(suited):
-	oneHot = np.zeros((1, 2))
-	if(suited == 's'):
-		oneHot[0, 0] = 1
-	else:
-		oneHot[0, 1] = 1
-	return oneHot
-
-# Cards should be rank followed by suit ('As', '7c', etc)
-# Puts cards in rank order and tells if they are suited ('AAu', '98s', etc)
-def processHand(card1, card2, ranks):
-	hand = ''
-	if(ranks.index(card1[0]) < ranks.index(card2[0])):
-		hand = hand + card1[0] + card2[0]
-	else:
-		hand = hand + card2[0] + card1[0]
-	if(card1[1] == card2[1]):
-		hand = hand + 's'
-	else:
-		hand = hand + 'u'
-	return hand
-
-def pusherLoss(pushPerc, callPerc, stackSize, equity):
-	loss = np.mean((-1)*(-0.5*(1-pushPerc) + pushPerc*(1.5*(1-callPerc) + (2*stackSize*equity - (stackSize - 0.5))*callPerc)))
-	return loss
-
-def callerLoss(pushPerc, callPerc, stackSize, equity):
-	loss = np.mean((-1)*(1.5*(1-pushPerc) + pushPerc*(-1*(1-callPerc) + (2*stackSize*(1-equity) - (stackSize - 1))*callPerc)))
-	return loss
+from push_fold_helper_functions import *
 
 # Hand is 'AKs', '87o', etc
 def holdemResourcesPusher(hand, ranks):
@@ -300,6 +261,9 @@ hmrCallLoss = 0
 myPushLoss = 0
 myCallLoss = 0
 
+myPushLossNoDeuces = 0
+myCallLossNoDeuces = 0
+
 myPushvsHmrCallLoss = 0
 myCallvsHmrPushLoss = 0
 
@@ -350,6 +314,15 @@ for i in range(numSims):
 	myPushLoss = myPushLoss + pusherLoss(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 	myCallLoss = myCallLoss + callerLoss(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 
+	if(hand1[0] == '2' and hand1[1] == '2'):
+		myPushLossNoDeuces = myPushLossNoDeuces + pusherLoss(np.array([[0]]), myCallPerc.detach().numpy(), stackSize, handEquity)
+	else:
+		myPushLossNoDeuces = myPushLossNoDeuces + pusherLoss(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
+	if(hand2[0] == '2' and hand2[1] == '2'):
+		myCallLossNoDeuces = myCallLossNoDeuces + callerLoss(myPushPerc.detach().numpy(), np.array([[0]]), stackSize, handEquity)
+	else:
+		myCallLossNoDeuces = myCallLossNoDeuces + callerLoss(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
+
 	myPushvsHmrCallLoss = myPushvsHmrCallLoss + pusherLoss(myPushPerc.detach().numpy(), hmrCallPerc, stackSize, handEquity)
 	myCallvsHmrPushLoss = myCallvsHmrPushLoss + callerLoss(hmrPushPerc, myCallPerc.detach().numpy(), stackSize, handEquity)
 
@@ -359,6 +332,9 @@ hmrCallLoss = hmrCallLoss/numSims
 myPushLoss = myPushLoss/numSims
 myCallLoss = myCallLoss/numSims
 
+myPushLossNoDeuces = myPushLossNoDeuces/numSims
+myCallLossNoDeuces = myCallLossNoDeuces/numSims
+
 myPushvsHmrCallLoss = myPushvsHmrCallLoss/numSims
 myCallvsHmrPushLoss = myCallvsHmrPushLoss/numSims
 
@@ -367,6 +343,9 @@ print('Holdem Resources caller loss: {}'.format(hmrCallLoss))
 
 print('My pusher loss: {}'.format(myPushLoss))
 print('My caller loss: {}'.format(myCallLoss))
+
+print('My pusher no deuces loss: {}'.format(myPushLossNoDeuces))
+print('My caller no deuces loss: {}'.format(myCallLossNoDeuces))
 
 print('My pusher vs HMR caller loss: {}'.format(myPushvsHmrCallLoss))
 print('My caller vs HMR pusher loss: {}'.format(myCallvsHmrPushLoss))
