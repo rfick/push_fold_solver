@@ -45,10 +45,10 @@ def oneHotCard(card, ranks):
 def oneHotSuited(suited, card1Rank, card2Rank):
 	oneHot = np.zeros((1, 3))
 	if(suited == 's'):
-		oneHot[1, 0, 0] = 1
+		oneHot[0, 0] = 1
 	else:
 		if(card1Rank != card2Rank):
-			oneHot[0, 1, 0] = 1
+			oneHot[0, 1] = 1
 		else:
-			oneHot[0, 0, 1] = 1
+			oneHot[0, 2] = 1
 	return oneHot

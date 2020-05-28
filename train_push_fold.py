@@ -38,10 +38,10 @@ for i in range(numEpochs):
 
 	player1Card1 = torch.zeros(handsPerEpoch, 13)
 	player1Card2 = torch.zeros(handsPerEpoch, 13)
-	player1Suited = torch.zeros(handsPerEpoch, 2)
+	player1Suited = torch.zeros(handsPerEpoch, 3)
 	player2Card1 = torch.zeros(handsPerEpoch, 13)
 	player2Card2 = torch.zeros(handsPerEpoch, 13)
-	player2Suited = torch.zeros(handsPerEpoch, 2)
+	player2Suited = torch.zeros(handsPerEpoch, 3)
 	stackSizes = torch.zeros(handsPerEpoch, 1)
 	handEquities = torch.zeros(handsPerEpoch, 1)
 
