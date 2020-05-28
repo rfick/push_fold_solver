@@ -14,6 +14,14 @@ def callerLoss(pushPerc, callPerc, stackSize, equity):
 	loss = torch.mean((-1)*(0.5*(1-pushPerc) + pushPerc*(-1*(1-callPerc) + (2*stackSize*(1-equity) - stackSize)*callPerc)))
 	return loss
 
+def pusherLossNumpy(pushPerc, callPerc, stackSize, equity):
+	loss = np.mean((-1)*(-0.5*(1-pushPerc) + pushPerc*(1*(1-callPerc) + (2*stackSize*equity - stackSize)*callPerc)))
+	return loss
+
+def callerLossNumpy(pushPerc, callPerc, stackSize, equity):
+	loss = np.mean((-1)*(0.5*(1-pushPerc) + pushPerc*(-1*(1-callPerc) + (2*stackSize*(1-equity) - stackSize)*callPerc)))
+	return loss
+
 # Cards should be rank followed by suit ('As', '7c', etc)
 # Puts cards in rank order and tells if they are suited ('AAu', '98s', etc)
 def processHand(card1, card2, ranks):
@@ -33,11 +41,14 @@ def oneHotCard(card, ranks):
 	oneHot[0, ranks.index(card[0])] = 1
 	return oneHot
 
-# 's' = suited, 'u' = offsuit
-def oneHotSuited(suited):
-	oneHot = np.zeros((1, 2))
+# 's' = suited, 'u' = offsuit, 3rd catagory for pairs
+def oneHotSuited(suited, card1Rank, card2Rank):
+	oneHot = np.zeros((1, 3))
 	if(suited == 's'):
-		oneHot[0, 0] = 1
+		oneHot[1, 0, 0] = 1
 	else:
-		oneHot[0, 1] = 1
+		if(card1Rank != card2Rank):
+			oneHot[0, 1, 0] = 1
+		else:
+			oneHot[0, 0, 1] = 1
 	return oneHot

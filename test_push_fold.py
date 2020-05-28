@@ -206,7 +206,7 @@ for firstrank in range(len(ranks)):
 		for suitcombo in range(len(suitcombos)):
 			card1 = oneHotCard(ranks[firstrank], ranks)
 			card2 = oneHotCard(ranks[secondrank], ranks)
-			suited = oneHotSuited(suitcombos[suitcombo])
+			suited = oneHotSuited(suitcombos[suitcombo], ranks[firstrank], ranks[secondrank])
 
 			card1 = torch.Tensor(card1)
 			card1 = card1.type(torch.FloatTensor)
@@ -284,7 +284,7 @@ for i in range(numSims):
 
 	card1 = oneHotCard(hand1[0], ranks)
 	card2 = oneHotCard(hand1[1], ranks)
-	suited = oneHotSuited(hand1[2])
+	suited = oneHotSuited(hand1[2], hand1[0], hand1[1])
 
 	card1 = torch.Tensor(card1)
 	card1 = card1.type(torch.FloatTensor)
@@ -297,7 +297,7 @@ for i in range(numSims):
 
 	card1 = oneHotCard(hand2[0], ranks)
 	card2 = oneHotCard(hand2[1], ranks)
-	suited = oneHotSuited(hand2[2])
+	suited = oneHotSuited(hand2[2], hand2[0], hand2[1])
 
 	card1 = torch.Tensor(card1)
 	card1 = card1.type(torch.FloatTensor)
@@ -308,23 +308,23 @@ for i in range(numSims):
 
 	myCallPerc = caller(card1, card2, suited, stackSizeTensor)
 
-	hmrPushLoss = hmrPushLoss + pusherLoss(hmrPushPerc, hmrCallPerc, stackSize, handEquity)
-	hmrCallLoss = hmrCallLoss + callerLoss(hmrPushPerc, hmrCallPerc, stackSize, handEquity)
+	hmrPushLoss = hmrPushLoss + pusherLossNumpy(hmrPushPerc, hmrCallPerc, stackSize, handEquity)
+	hmrCallLoss = hmrCallLoss + callerLossNumpy(hmrPushPerc, hmrCallPerc, stackSize, handEquity)
 
-	myPushLoss = myPushLoss + pusherLoss(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
-	myCallLoss = myCallLoss + callerLoss(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
+	myPushLoss = myPushLoss + pusherLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
+	myCallLoss = myCallLoss + callerLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 
 	if(hand1[0] == '2' and hand1[1] == '2'):
-		myPushLossNoDeuces = myPushLossNoDeuces + pusherLoss(np.array([[0]]), myCallPerc.detach().numpy(), stackSize, handEquity)
+		myPushLossNoDeuces = myPushLossNoDeuces + pusherLossNumpy(np.array([[1]]), myCallPerc.detach().numpy(), stackSize, handEquity)
 	else:
-		myPushLossNoDeuces = myPushLossNoDeuces + pusherLoss(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
+		myPushLossNoDeuces = myPushLossNoDeuces + pusherLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 	if(hand2[0] == '2' and hand2[1] == '2'):
-		myCallLossNoDeuces = myCallLossNoDeuces + callerLoss(myPushPerc.detach().numpy(), np.array([[0]]), stackSize, handEquity)
+		myCallLossNoDeuces = myCallLossNoDeuces + callerLossNumpy(myPushPerc.detach().numpy(), np.array([[0]]), stackSize, handEquity)
 	else:
-		myCallLossNoDeuces = myCallLossNoDeuces + callerLoss(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
+		myCallLossNoDeuces = myCallLossNoDeuces + callerLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 
-	myPushvsHmrCallLoss = myPushvsHmrCallLoss + pusherLoss(myPushPerc.detach().numpy(), hmrCallPerc, stackSize, handEquity)
-	myCallvsHmrPushLoss = myCallvsHmrPushLoss + callerLoss(hmrPushPerc, myCallPerc.detach().numpy(), stackSize, handEquity)
+	myPushvsHmrCallLoss = myPushvsHmrCallLoss + pusherLossNumpy(myPushPerc.detach().numpy(), hmrCallPerc, stackSize, handEquity)
+	myCallvsHmrPushLoss = myCallvsHmrPushLoss + callerLossNumpy(hmrPushPerc, myCallPerc.detach().numpy(), stackSize, handEquity)
 
 hmrPushLoss = hmrPushLoss/numSims
 hmrCallLoss = hmrCallLoss/numSims

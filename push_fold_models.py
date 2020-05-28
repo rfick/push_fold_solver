@@ -5,7 +5,7 @@ import torch.nn.functional as F
 class Pusher(nn.Module):
     def __init__(self):
         super(Pusher, self).__init__()
-        self.FC1 = nn.Linear(29, 10) # Card 1 = 13 ranks, Card 2 = 13 ranks, Suited/Unsuited = 2, Stack size
+        self.FC1 = nn.Linear(30, 10) # Card 1 = 13 ranks, Card 2 = 13 ranks, Suited/Unsuited/Paired = 3, Stack size
         self.FC2 = nn.Linear(10, 5)
         self.FC3 = nn.Linear(5, 1)
 
@@ -19,7 +19,7 @@ class Pusher(nn.Module):
 class Caller(nn.Module):
     def __init__(self):
         super(Caller, self).__init__()
-        self.FC1 = nn.Linear(29, 10) # Card 1 = 13 ranks, Card 2 = 13 ranks, Suited/Unsuited = 2, Stack size
+        self.FC1 = nn.Linear(30, 10) # Card 1 = 13 ranks, Card 2 = 13 ranks, Suited/Unsuited/Paired = 3, Stack size
         self.FC2 = nn.Linear(10, 5)
         self.FC3 = nn.Linear(5, 1)
 
