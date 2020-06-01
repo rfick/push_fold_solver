@@ -315,7 +315,7 @@ for i in range(numSims):
 	myCallLoss = myCallLoss + callerLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 
 	if(hand1[0] == '2' and hand1[1] == '2'):
-		myPushLossNoDeuces = myPushLossNoDeuces + pusherLossNumpy(np.array([[1]]), myCallPerc.detach().numpy(), stackSize, handEquity)
+		myPushLossNoDeuces = myPushLossNoDeuces + pusherLossNumpy(np.array([[0]]), myCallPerc.detach().numpy(), stackSize, handEquity)
 	else:
 		myPushLossNoDeuces = myPushLossNoDeuces + pusherLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 	if(hand2[0] == '2' and hand2[1] == '2'):

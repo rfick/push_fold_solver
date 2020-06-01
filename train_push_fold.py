@@ -17,8 +17,8 @@ for suit in suits:
 	for rank in ranks:
 		deck.append(rank + suit)
 
-numEpochs = 500000
-handsPerEpoch = 100
+numEpochs = 50000
+handsPerEpoch = 1000
 learning_rate = 1e-4
 optim_betas = (0.9, 0.999)
 smallestStackSize = 20
@@ -60,7 +60,7 @@ for i in range(numEpochs):
 		player1Suited[j, :] = torch.Tensor(oneHotSuited(player1Hand[2], player1Hand[0], player1Hand[1]))
 		player2Card1[j, :] = torch.Tensor(oneHotCard(player2Hand[0], ranks))
 		player2Card2[j, :] = torch.Tensor(oneHotCard(player2Hand[1], ranks))
-		player2Suited[j, :] = torch.Tensor(oneHotSuited(player2Hand[2], player1Hand[0], player1Hand[1]))
+		player2Suited[j, :] = torch.Tensor(oneHotSuited(player2Hand[2], player2Hand[0], player2Hand[1]))
 		stackSizes[j, 0] = stackSize
 		handEquities[j, 0] = handEquity
 
