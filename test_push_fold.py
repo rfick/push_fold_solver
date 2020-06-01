@@ -261,9 +261,6 @@ hmrCallLoss = 0
 myPushLoss = 0
 myCallLoss = 0
 
-myPushLossNoDeuces = 0
-myCallLossNoDeuces = 0
-
 myPushvsHmrCallLoss = 0
 myCallvsHmrPushLoss = 0
 
@@ -314,15 +311,6 @@ for i in range(numSims):
 	myPushLoss = myPushLoss + pusherLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 	myCallLoss = myCallLoss + callerLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
 
-	if(hand1[0] == '2' and hand1[1] == '2'):
-		myPushLossNoDeuces = myPushLossNoDeuces + pusherLossNumpy(np.array([[0]]), myCallPerc.detach().numpy(), stackSize, handEquity)
-	else:
-		myPushLossNoDeuces = myPushLossNoDeuces + pusherLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
-	if(hand2[0] == '2' and hand2[1] == '2'):
-		myCallLossNoDeuces = myCallLossNoDeuces + callerLossNumpy(myPushPerc.detach().numpy(), np.array([[0]]), stackSize, handEquity)
-	else:
-		myCallLossNoDeuces = myCallLossNoDeuces + callerLossNumpy(myPushPerc.detach().numpy(), myCallPerc.detach().numpy(), stackSize, handEquity)
-
 	myPushvsHmrCallLoss = myPushvsHmrCallLoss + pusherLossNumpy(myPushPerc.detach().numpy(), hmrCallPerc, stackSize, handEquity)
 	myCallvsHmrPushLoss = myCallvsHmrPushLoss + callerLossNumpy(hmrPushPerc, myCallPerc.detach().numpy(), stackSize, handEquity)
 
@@ -332,9 +320,6 @@ hmrCallLoss = hmrCallLoss/numSims
 myPushLoss = myPushLoss/numSims
 myCallLoss = myCallLoss/numSims
 
-myPushLossNoDeuces = myPushLossNoDeuces/numSims
-myCallLossNoDeuces = myCallLossNoDeuces/numSims
-
 myPushvsHmrCallLoss = myPushvsHmrCallLoss/numSims
 myCallvsHmrPushLoss = myCallvsHmrPushLoss/numSims
 
@@ -343,9 +328,6 @@ print('Holdem Resources caller loss: {}'.format(hmrCallLoss))
 
 print('My pusher loss: {}'.format(myPushLoss))
 print('My caller loss: {}'.format(myCallLoss))
-
-print('My pusher no deuces loss: {}'.format(myPushLossNoDeuces))
-print('My caller no deuces loss: {}'.format(myCallLossNoDeuces))
 
 print('My pusher vs HMR caller loss: {}'.format(myPushvsHmrCallLoss))
 print('My caller vs HMR pusher loss: {}'.format(myCallvsHmrPushLoss))
